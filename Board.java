@@ -8,10 +8,10 @@ import java.awt.event.ActionListener;
 public class Board {
     public void createBoard(){
         //前端面板
-        JFrame Frame=new JFrame("BaseNHex Pro By Francisco Nie0.01");
+        JFrame Frame=new JFrame("BaseNHex Pro By Francisco Nie0.03");
         JPanel jp=new JPanel();
 
-        Frame.setSize(500,300);
+        Frame.setSize(800,500);
         Box all=Box.createVerticalBox();
 
 
@@ -22,26 +22,27 @@ public class Board {
         JLabel t1=new JLabel();
         JLabel t2=new JLabel();
         JLabel t3=new JLabel();
-        JTextArea plain=new JTextArea("要编码或解码的内容",5,25);
-        JTextArea phex=new JTextArea("hex:");
-        JScrollPane jsp=new JScrollPane(plain);
-        jsp.setBounds(13, 10, 350, 340);
+        TextArea plain=new TextArea("要编码或解码的内容",12,30,TextArea.SCROLLBARS_VERTICAL_ONLY);
+        TextArea phex=new TextArea("hex:",12,60,TextArea.SCROLLBARS_VERTICAL_ONLY);
+        //JScrollPane jsp=new JScrollPane();
 
-        jsp.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        JScrollPane jpp=new JScrollPane(phex);
-        jpp.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        //jsp.setBounds(210, 10, 10, 340);
+        //jsp.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        //JScrollPane jpp=new JScrollPane();
+        //jpp.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 
-        plain.setBounds(10,10,200,80);
-        plain.setRows(5);
-        plain.setColumns(15);
-        plain.setLineWrap(true);
-        plain.setWrapStyleWord(true);
-        phex.setBounds(220,10,200,80);
-        phex.setRows(5);
-        phex.setColumns(15);
-        phex.setLineWrap(true);
-        phex.setWrapStyleWord(true);
+        //plain.setBounds(10,10,200,80);
+        //plain.add(jsp);
+        //plain.setRows(5);
+        //plain.setColumns(15);
+        //plain.setLineWrap(true);
+        //plain.setWrapStyleWord(true);
+        //phex.setBounds(220,10,200,80);
+        //phex.setRows(5);
+        //phex.setColumns(15);
+        //phex.setLineWrap(true);
+        //phex.setWrapStyleWord(true);
         bh11.add(t1);
 
         //bh12.add(jsp);
@@ -54,18 +55,18 @@ public class Board {
 
 
         Box bh2=Box.createHorizontalBox();
-        JTextArea txtout=new JTextArea("输出的内容（文本）",5,8);
-        txtout.setColumns(8);
-        txtout.setRows(5);
+        TextArea txtout=new TextArea("输出的内容（文本）",12,30,TextArea.SCROLLBARS_VERTICAL_ONLY);
+        //txtout.setColumns(8);
+        //txtout.setRows(5);
         txtout.setEditable(false);
-        txtout.setWrapStyleWord(true);
-        txtout.setLineWrap(true);
-        JTextArea hexout=new JTextArea("输出的内容（hex）",5,16);
-        hexout.setColumns(16);
-        hexout.setRows(5);
+        //txtout.setWrapStyleWord(true);
+        //txtout.setLineWrap(true);
+        TextArea hexout=new TextArea("输出的内容（hex）",12,60,TextArea.SCROLLBARS_VERTICAL_ONLY);
+        //hexout.setColumns(16);
+        //hexout.setRows(5);
         hexout.setEditable(false);
-        hexout.setWrapStyleWord(true);
-        hexout.setLineWrap(true);
+        //hexout.setWrapStyleWord(true);
+        //hexout.setLineWrap(true);
 
         bh2.add(txtout);
         bh2.add(hexout);
@@ -83,6 +84,10 @@ public class Board {
         ffile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)  {
+                plain.setText("");
+                phex.setText("");
+                txtout.setText("");
+                hexout.setText("");
                 JFileChooser jfc=new JFileChooser();
                 int returnVal = jfc.showOpenDialog(null);
                 if(returnVal == JFileChooser.APPROVE_OPTION)
@@ -127,6 +132,9 @@ public class Board {
         encode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                phex.setText("");
+                txtout.setText("");
+                hexout.setText("");
                 Basebox bsx=new Basebox(plain.getText());
                 phex.setText(TransStringTool.str2HexStr(plain.getText()));
                 txtout.setText(bsx.encoding());
@@ -137,15 +145,28 @@ public class Board {
         decode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                phex.setText("");
+                txtout.setText("");
+                hexout.setText("");
                 String m=plain.getText();
                 if(m.length()%4!=0){
                     JOptionPane.showMessageDialog(null, "the length is"+m.length()+", is not mod 4", "length error", JOptionPane.ERROR_MESSAGE);
                 }
                 else {
-                    Basebox bsx = new Basebox(plain.getText());
-                    phex.setText(TransStringTool.str2HexStr(plain.getText()));
-                    txtout.setText(bsx.decoding());
-                    hexout.setText(TransStringTool.str2HexStr(txtout.getText()));
+                    int r=m.indexOf('\n');
+                    if (r==-1) {
+
+
+                        Basebox bsx = new Basebox(plain.getText());
+                        phex.setText(TransStringTool.str2HexStr(plain.getText()));
+                        txtout.setText(bsx.decoding());
+                        hexout.setText(TransStringTool.str2HexStr(txtout.getText()));
+                        //String p=txtout.getText();
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "illegal input!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
                 }
             }
         });
@@ -153,27 +174,38 @@ public class Board {
         decsave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                phex.setText("");
+                txtout.setText("");
+                hexout.setText("");
                 String m = plain.getText();
                 if (m.length() % 4 != 0) {
                     JOptionPane.showMessageDialog(null, "the length is" + m.length() + ", is not mod 4", "length error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    Basebox bsx = new Basebox(plain.getText());
-                    phex.setText(TransStringTool.str2HexStr(plain.getText()));
-                    txtout.setText(bsx.decoding());
-                    hexout.setText(TransStringTool.str2HexStr(txtout.getText()));
-                    byte[] bsave =Base64.getDecoder().decode(plain.getText());
-                    JFileChooser jf = new JFileChooser("d:/");
-                    int value = jf.showSaveDialog(null);
-                    if (value == JFileChooser.APPROVE_OPTION) { //判断窗口是否点的是打开或保存
-                        File getPath = jf.getSelectedFile(); //取得路径
-                        try {
-                            OutputStream of = new FileOutputStream(getPath);
-                            of.write(bsave);
-                        } catch (Exception e1) {
+                    int r=m.indexOf('\n');
+                    if (r==-1) {
+
+
+
+                        Basebox bsx = new Basebox(plain.getText());
+                        phex.setText(TransStringTool.str2HexStr(plain.getText()));
+                        txtout.setText(bsx.decoding());
+                        hexout.setText(TransStringTool.str2HexStr(txtout.getText()));
+                        byte[] bsave = Base64.getDecoder().decode(plain.getText());
+                        JFileChooser jf = new JFileChooser("d:/");
+                        int value = jf.showSaveDialog(null);
+                        if (value == JFileChooser.APPROVE_OPTION) { //判断窗口是否点的是打开或保存
+                            File getPath = jf.getSelectedFile(); //取得路径
+                            try {
+                                OutputStream of = new FileOutputStream(getPath);
+                                of.write(bsave);
+                            } catch (Exception e1) {
+                            }
+
                         }
-
+                        else {
+                            JOptionPane.showMessageDialog(null, "illegal input!", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
-
                 }
             }
         });
